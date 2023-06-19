@@ -1,0 +1,110 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:prolab/app/component/appbackground.dart';
+import 'package:prolab/app/component/appinput.dart';
+import 'package:prolab/app/routes/app_pages.dart';
+
+import '../controllers/authentifcation_controller.dart';
+
+class AuthentifcationView1 extends GetView<AuthentifcationController> {
+  const AuthentifcationView1({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: AppBackground(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Row(
+                children: [
+                  const Spacer(),
+                  Expanded(
+                    flex: 8,
+                    child: Form(
+                      key: controller.form,
+                      child: Column(
+                        children: [
+                          Image.asset("assets/logo.png", scale: 1.5),
+                          SizedBox(height: 30.h),
+                          Column(children: [
+                            const AppInpput(
+                              hint: "ID laboratoire",
+                              prefIcon: Icons.card_membership,
+                            ),
+                            SizedBox(height: 10.h),
+                            const AppInpput(
+                              hint: "abc@gmail.com",
+                              prefIcon: Icons.email,
+                            ),
+                            SizedBox(height: 10.h),
+                            GetBuilder<AuthentifcationController>(
+                              id: "passwordVisibilty",
+                              builder: (_) {
+                                return AppInpput(
+                                  hint: "votre mot de passe",
+                                  password: controller.passwordVisibilty,
+                                  prefIcon: Icons.lock,
+                                  suffixIcon: IconButton(
+                                      onPressed: controller.toggleVisiblity,
+                                      icon: Icon(controller.passwordVisibilty
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined)),
+                                );
+                              },
+                            ),
+                            GetBuilder<AuthentifcationController>(
+                              id: "souvenir",
+                              builder: (_) {
+                                return SwitchListTile(
+                                  value: controller.souvenir,
+                                  onChanged: controller.toggle,
+                                  title: const Text('se souvenir de moi'),
+                                );
+                              },
+                            ),
+                            SizedBox(height: 20.h),
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      backgroundColor: HexColor("#4BADD6"),
+                                      fixedSize: Size(300.w, 55.h)),
+                                  onPressed: () {
+                                    
+                                    if (controller.form.currentState!
+                                        .validate()) {
+
+                                          controller.save(context);
+                                      //Get.offAllNamed(Routes.HOME);
+                                    }
+                                  },
+                                  icon: CircleAvatar(
+                                      backgroundColor: HexColor("#A8CD6A"),
+                                      child: const Icon(
+                                        Icons.arrow_back,
+                                        color: Colors.white,
+                                      )),
+                                  label: Text("S'identifier".toUpperCase())),
+                            )
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
